@@ -38,16 +38,17 @@
 
 ## 🚀 如何下载与运行
 
-### 使用 PowerShell 快速下载
-在 PowerShell 中运行以下命令：
+### 使用 PowerShell 快速下载并运行
+在 PowerShell 中运行以下命令（自动下载、允许脚本运行并立即启动）：
 
 ```powershell
 Invoke-WebRequest "https://raw.githubusercontent.com/HK560/enable-loudness-equalisation/main/EnableLoudness.ps1" -OutFile "$env:USERPROFILE\EnableLoudness.ps1"
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+& "$env:USERPROFILE\EnableLoudness.ps1"
 ```
 *(提示：这里使用 `$env:USERPROFILE` 替代了原版 README 中的 `$env:HOMEPATH`，避免当前处于非 C 盘目录下找不到文件的问题)*
 
-### 基本用法
+### 基本用法选项
 
 1. **交互模式（推荐）**：
    无需附加任何参数，直接运行脚本即可从列表中菜单式选择当前活跃的设备：

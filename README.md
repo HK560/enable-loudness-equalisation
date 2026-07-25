@@ -38,17 +38,18 @@ This fork introduces several key usability and reliability improvements to `Enab
 
 ## 🚀 How to Download and Run
 
-### Quick Install via PowerShell
+### Quick Download & Run via PowerShell
 Run the following in PowerShell:
 
 ```powershell
 Invoke-WebRequest "https://raw.githubusercontent.com/HK560/enable-loudness-equalisation/main/EnableLoudness.ps1" -OutFile "$env:USERPROFILE\EnableLoudness.ps1"
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+& "$env:USERPROFILE\EnableLoudness.ps1"
 ```
 
 *(Note: We use `$env:USERPROFILE` instead of `$env:HOMEPATH` to avoid drive letter mismatch issues on non-C: drives).*
 
-### Basic Usage
+### Basic Usage Options
 
 1. **Interactive Mode (Recommended)**:
    Simply run the script without parameters to interactively pick an active output device from a list:
