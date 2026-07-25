@@ -1,27 +1,74 @@
-# Enable Loudness Equalisation
-Automatically adds and enables loudness equalisation to any playback device.
+# Enable Loudness Equalisation (HK560 Fork)
 
-Only works if your selected driver supports enhancements for speakers, but didn't expose this support for any other output devices. This script will  expose any existing support, but can not work if the driver doesn't ship any.
+Language: **English** | [简体中文](README_zh.md)
+
+> **Repository URL**: [https://github.com/HK560/enable-loudness-equalisation](https://github.com/HK560/enable-loudness-equalisation)  
+> *(Forked from [Falcosc/enable-loudness-equalisation](https://github.com/Falcosc/enable-loudness-equalisation))*
+
+Automatically adds and enables Loudness Equalisation to any playback device on Windows.
+
+Only works if your selected driver supports enhancements for speakers, but didn't expose this support for any other output devices. This script will expose any existing support, but cannot work if the driver doesn't ship any.
 
 | before execution | after execution |
 | --------------- | -------------- |
 | ![Enhancements Missing](EnhancementsMissing.png)  | ![Enhancements Added](EnhancementsAdded.png)  |
 
-If you are looking for bass boost, you can use the more complex version of this script https://github.com/Falcosc/enable-bass-boost
+If you are looking for bass boost, you can use the more complex version of this script [Falcosc/enable-bass-boost](https://github.com/Falcosc/enable-bass-boost).
 
-# How to Download and Run
-run in powershell
-```
-Invoke-WebRequest https://raw.githubusercontent.com/Falcosc/enable-loudness-equalisation/main/EnableLoudness.ps1 -OutFile $env:HOMEPATH\EnableLoudness.ps1
+---
+
+## 🌟 What's New in HK560 Fork
+
+This fork introduces several key usability and reliability improvements to `EnableLoudness.ps1`:
+
+1. **📱 Interactive Audio Device Selection**
+   - When running `EnableLoudness.ps1` without specifying `-playbackDeviceName`, the script automatically detects and lists all currently **active** audio rendering devices (`DeviceState -eq 1`).
+   - Presents an intuitive, numbered interactive console menu to select your desired playback device.
+   - If only 1 active playback device is detected on your system, it automatically selects it without prompting.
+2. **🔍 Smart Device Matching & Invisible Character Filtering**
+   - Displays friendly formatted names like `Realtek High Definition Audio (Realtek Audio)`.
+   - Filters out non-printable/invisible Unicode control characters that often break device lookup in registry keys.
+   - Supports fuzzy searching across `Name`, `FriendlyName`, `DeviceDesc`, and device registry property keys.
+3. **🔑 Seamless Administrator Elevation**
+   - If the script requires administrator elevation (UAC), it preserves the selected device name and parameters (e.g. `-releaseTime`) when spawning the elevated PowerShell window, avoiding repeated selections.
+4. **🎨 Enhanced UI & Color-Coded Console Output**
+   - Features a clean CLI banner and color-coded status messages (cyan/green/yellow/red) for easier debugging and user feedback.
+
+---
+
+## 🚀 How to Download and Run
+
+### Quick Install via PowerShell
+Run the following in PowerShell:
+
+```powershell
+Invoke-WebRequest https://raw.githubusercontent.com/HK560/enable-loudness-equalisation/main/EnableLoudness.ps1 -OutFile $env:HOMEPATH\EnableLoudness.ps1
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-. $env:HOMEPATH\EnableLoudness.ps1
-```
-Or if you want to set the fastest possible time until sound level gets adjusted (unpleasend to daily usage but gives a competitive edge on video games where dynamic audiolevel adjustments are not banned)
-```
-. $env:HOMEPATH\EnableLoudness.ps1 -releaseTime 2
 ```
 
-## Using the Toggle Version with GUI
+### Basic Usage
+
+1. **Interactive Mode (Recommended)**:
+   Simply run the script without parameters to interactively pick an active output device from a list:
+   ```powershell
+   . $env:HOMEPATH\EnableLoudness.ps1
+   ```
+
+2. **Specify Playback Device Name**:
+   ```powershell
+   . $env:HOMEPATH\EnableLoudness.ps1 -playbackDeviceName BE279
+   ```
+
+3. **Custom Release Time**:
+   Set the release time for sound level adjustments from `2` (fastest) to `7` (slowest, default is `4`):
+   ```powershell
+   . $env:HOMEPATH\EnableLoudness.ps1 -releaseTime 2
+   ```
+
+---
+
+## 🖥️ Using the Toggle Version with GUI
+
 This script includes a toggle version with an AutoHotkey (AHK) GUI script for easier use:
 1. **Install [AutoHotkey v2.0+](https://www.autohotkey.com/)** if you haven't already.
 2. Save the `ToggleGui.ahk` script in the same folder as `EnableLoudness.ps1`.
@@ -51,59 +98,68 @@ For the toggle script to work correctly, the following environment variables mus
    ```
 3. Restart Command Prompt or PowerShell to apply the changes, or reboot your system for a global update.
 
-# When is it needed?
-- HDMI, Display Port, Digital Optical Output playback devices usually doesn't have it
-- if you can not find an audio driver version which adds loudness equalisation to any of your playback devices
-- you can't enable it globally in your driver
+---
 
-# Why does it need to be scripted?
-- if you want to toggle it via hotkey
-- updates are messing with your audio drivers
-- some use cases lead into re-registration of HDMI or DisplayPort playback devices, which will purge your settings every time
+## ❓ When is it needed?
+- HDMI, Display Port, Digital Optical Output playback devices usually don't have it exposed.
+- If you cannot find an audio driver version which adds loudness equalisation to any of your playback devices.
+- You can't enable it globally in your driver.
 
-# What does it do?
-1. search for all active playback devices by name in registry
-1. imports audio enhancement settings
-    - PreMixEffectClsid and PostMixEffectClsid
-    - StreamEffectClsid and ModeEffectClsid
-    - Enhancement Tab UI defnition
-    - loudness equalisation flag
-    - release time value
-1. restarts audio service to apply changed registry values
+---
 
-# Known Issues
-- all setting flags stored in `fc52a749-4be9-4510-896e-966ba6525980` get overwritten, instead of just enabling loudness equalisation
-- flags key are different across Windows versions `fc52a749-4be9-4510-896e-966ba6525980` used in this script works for Windows 11, maybe 10 as well.
-- If the playback device gets re-detected the audio service reboot maybe sets volume to default 100%
-- Sound Settings UI shows 0% volume if it was open during restart (reopening fixes it)
-- Restarting audio service after sleep does break the taskbar tray icon volume slider in some situations
-    - mediakeys and sound settings UI volume controll still works fine
-    - tray icon slider gets fixed with full reboot
-- does not work if your driver doesn't have any enhancements, try a different one
-- incompatible devices will be unable to output audio until settings are restored
+## 💡 Why does it need to be scripted?
+- If you want to toggle it via hotkey.
+- Windows updates mess with your audio drivers.
+- Some use cases lead into re-registration of HDMI or DisplayPort playback devices, which will purge your settings every time.
 
-# Restore Settings
-Most drivers restore settings if the registry key get removed, that would be the manual way to restore.
-Over UI we found the following way to reset your settings [#156](https://github.com/Falcosc/enable-loudness-equalisation/issues/28)
-1. Device Manager
-1. Sound, video and game controllers
-1. Right-click on your Audio Device
-1. Uninstall device, DO NOT check “Delete driver software”
-1. Reboot
+---
 
-# Install as Task
-1. Open Task Scheduler
-1. Action -> Create Task...
-1. General -> Run with highest privileges
-  
-    ![Run with highest privileges](TaskAdmin.png)
-1. Triggers -> New...
-  
-    ![Additional Triggers](TaskTrigger.png)
-1. Actions -> New...
-    - Action: Start a program
-    - Program: powershell
-    - Add arguments: `-WindowStyle hidden -f %HOMEPATH%\EnableLoudness.ps1 -playbackDeviceName BE279`
-1. To test it you could use an invalid DeviceName like "-playbackDeviceName XXX" then you will see an error message pop-up after login
-  
-    ![Test Error](ErrorTest.png)
+## ⚙️ What does it do?
+1. Searches for active playback devices by name/registry properties in Windows `MMDevices\Audio\Render`.
+2. Imports audio enhancement registry settings:
+    - `PreMixEffectClsid` and `PostMixEffectClsid`
+    - `StreamEffectClsid` and `ModeEffectClsid`
+    - Enhancement Tab UI definition
+    - Loudness Equalisation flag
+    - Release time value
+3. Restarts the Windows Audio service (`audiosrv`) to apply changed registry values.
+
+---
+
+## ⚠️ Known Issues
+- All setting flags stored in `fc52a749-4be9-4510-896e-966ba6525980` get overwritten, instead of just enabling loudness equalisation.
+- Flags key are different across Windows versions; `fc52a749-4be9-4510-896e-966ba6525980` used in this script works for Windows 11, and Windows 10 as well.
+- If the playback device gets re-detected, the audio service reboot might set volume to default 100%.
+- Sound Settings UI shows 0% volume if it was open during restart (reopening fixes it).
+- Restarting audio service after sleep does break the taskbar tray icon volume slider in some situations.
+    - Media keys and Sound Settings UI volume control still work fine.
+    - Tray icon slider gets fixed with full reboot.
+- Does not work if your driver doesn't have any enhancements; try a different audio driver package.
+- Incompatible devices will be unable to output audio until settings are restored.
+
+---
+
+## 🔄 Restore Settings
+Most drivers restore default settings if the registry key gets removed, which is the manual way to restore.
+Alternatively, reset settings via Device Manager (see [#28](https://github.com/Falcosc/enable-loudness-equalisation/issues/28)):
+1. Open **Device Manager**.
+2. Expand **Sound, video and game controllers**.
+3. Right-click on your Audio Device.
+4. Select **Uninstall device** (do **NOT** check "Delete driver software").
+5. Reboot your system.
+
+---
+
+## ⏰ Install as Task
+1. Open **Task Scheduler**.
+2. Click **Action -> Create Task...**
+3. Under **General**, check **Run with highest privileges**.  
+   ![Run with highest privileges](TaskAdmin.png)
+4. Under **Triggers**, click **New...**  
+   ![Additional Triggers](TaskTrigger.png)
+5. Under **Actions**, click **New...**:
+    - **Action**: Start a program
+    - **Program/script**: `powershell`
+    - **Add arguments**: `-WindowStyle hidden -f %HOMEPATH%\EnableLoudness.ps1 -playbackDeviceName BE279`
+6. To test it, use an invalid DeviceName like `-playbackDeviceName XXX`; an error pop-up will appear upon login.  
+   ![Test Error](ErrorTest.png)

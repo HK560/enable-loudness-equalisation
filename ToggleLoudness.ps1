@@ -5,7 +5,7 @@
     Imports registry keys to add enhancement features and enables loudness equalisation.
     It restarts audio service to apply imported registry settings
 .LINK
-    https://github.com/Falcosc/enable-loudness-equalisation
+    https://github.com/HK560/enable-loudness-equalisation
 .LINK
 .PARAMETER playbackDeviceName
     Searches for Audio Device Names starting with this String
