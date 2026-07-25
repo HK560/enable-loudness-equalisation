@@ -42,27 +42,29 @@ This fork introduces several key usability and reliability improvements to `Enab
 Run the following in PowerShell:
 
 ```powershell
-Invoke-WebRequest https://raw.githubusercontent.com/HK560/enable-loudness-equalisation/main/EnableLoudness.ps1 -OutFile $env:HOMEPATH\EnableLoudness.ps1
+Invoke-WebRequest "https://raw.githubusercontent.com/HK560/enable-loudness-equalisation/main/EnableLoudness.ps1" -OutFile "$env:USERPROFILE\EnableLoudness.ps1"
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
+
+*(Note: We use `$env:USERPROFILE` instead of `$env:HOMEPATH` to avoid drive letter mismatch issues on non-C: drives).*
 
 ### Basic Usage
 
 1. **Interactive Mode (Recommended)**:
    Simply run the script without parameters to interactively pick an active output device from a list:
    ```powershell
-   . $env:HOMEPATH\EnableLoudness.ps1
+   & "$env:USERPROFILE\EnableLoudness.ps1"
    ```
 
 2. **Specify Playback Device Name**:
    ```powershell
-   . $env:HOMEPATH\EnableLoudness.ps1 -playbackDeviceName BE279
+   & "$env:USERPROFILE\EnableLoudness.ps1" -playbackDeviceName BE279
    ```
 
 3. **Custom Release Time**:
    Set the release time for sound level adjustments from `2` (fastest) to `7` (slowest, default is `4`):
    ```powershell
-   . $env:HOMEPATH\EnableLoudness.ps1 -releaseTime 2
+   & "$env:USERPROFILE\EnableLoudness.ps1" -releaseTime 2
    ```
 
 ---
@@ -160,6 +162,6 @@ Alternatively, reset settings via Device Manager (see [#28](https://github.com/F
 5. Under **Actions**, click **New...**:
     - **Action**: Start a program
     - **Program/script**: `powershell`
-    - **Add arguments**: `-WindowStyle hidden -f %HOMEPATH%\EnableLoudness.ps1 -playbackDeviceName BE279`
+    - **Add arguments**: `-WindowStyle hidden -f "%USERPROFILE%\EnableLoudness.ps1" -playbackDeviceName BE279`
 6. To test it, use an invalid DeviceName like `-playbackDeviceName XXX`; an error pop-up will appear upon login.  
    ![Test Error](ErrorTest.png)

@@ -42,27 +42,28 @@
 在 PowerShell 中运行以下命令：
 
 ```powershell
-Invoke-WebRequest https://raw.githubusercontent.com/HK560/enable-loudness-equalisation/main/EnableLoudness.ps1 -OutFile $env:HOMEPATH\EnableLoudness.ps1
+Invoke-WebRequest "https://raw.githubusercontent.com/HK560/enable-loudness-equalisation/main/EnableLoudness.ps1" -OutFile "$env:USERPROFILE\EnableLoudness.ps1"
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
+*(提示：这里使用 `$env:USERPROFILE` 替代了原版 README 中的 `$env:HOMEPATH`，避免当前处于非 C 盘目录下找不到文件的问题)*
 
 ### 基本用法
 
 1. **交互模式（推荐）**：
    无需附加任何参数，直接运行脚本即可从列表中菜单式选择当前活跃的设备：
    ```powershell
-   . $env:HOMEPATH\EnableLoudness.ps1
+   & "$env:USERPROFILE\EnableLoudness.ps1"
    ```
 
 2. **指定设备名称运行**：
    ```powershell
-   . $env:HOMEPATH\EnableLoudness.ps1 -playbackDeviceName BE279
+   & "$env:USERPROFILE\EnableLoudness.ps1" -playbackDeviceName BE279
    ```
 
 3. **自定义响应速度（Release Time）**：
    设置音量调整的响应速度，范围从 `2`（最快）到 `7`（最慢，默认值为 `4`）：
    ```powershell
-   . $env:HOMEPATH\EnableLoudness.ps1 -releaseTime 2
+   & "$env:USERPROFILE\EnableLoudness.ps1" -releaseTime 2
    ```
    *(注：在一些竞技类 FPS 游戏中使用更快响应时间 `2` 能够更快平抑突发爆音，但在日常听歌使用中较快响应可能会有轻微压缩感)*
 
@@ -149,7 +150,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 ## ⏰ 配合计划任务使用 (登录/开机自动启用)
 1. 打开 **任务计划程序** (Task Scheduler)。
-2. 点击 **操作 -> 创建任务...**
+2. 点击 **操作 -> Create Task...**
 3. 在 **常规** 选项卡中，勾选 **使用最高权限运行**。  
    ![使用最高权限运行](TaskAdmin.png)
 4. 在 **触发器** 选项卡中，点击 **新建...** 设置触发条件（如登录时或开机时）。  
@@ -157,6 +158,6 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 5. 在 **操作** 选项卡中，点击 **新建...**：
     - **操作**：启动程序
     - **程序或脚本**：`powershell`
-    - **添加参数**：`-WindowStyle hidden -f %HOMEPATH%\EnableLoudness.ps1 -playbackDeviceName BE279`
+    - **添加参数**：`-WindowStyle hidden -f "%USERPROFILE%\EnableLoudness.ps1" -playbackDeviceName BE279`
 6. 测试方法：可以使用不存在的设备名称（如 `-playbackDeviceName XXX`），登录后若弹出错误提示框则说明计划任务配置成功。  
    ![测试错误提示](ErrorTest.png)
