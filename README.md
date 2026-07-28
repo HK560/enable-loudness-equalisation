@@ -142,9 +142,26 @@ For the toggle script to work correctly, the following environment variables mus
 
 ---
 
-## 🔄 Restore Settings
-Most drivers restore default settings if the registry key gets removed, which is the manual way to restore.
-Alternatively, reset settings via Device Manager (see [#28](https://github.com/Falcosc/enable-loudness-equalisation/issues/28)):
+## 🔄 Restore Settings / Uninstall
+
+### Method 1: Automatic Uninstallation via Script (Recommended)
+Run the following PowerShell command to automatically remove loudness equalisation registry settings and restore system default audio behavior:
+
+```powershell
+Invoke-WebRequest "https://raw.githubusercontent.com/HK560/enable-loudness-equalisation/main/DisableLoudness.ps1" -OutFile "$env:USERPROFILE\DisableLoudness.ps1"
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+& "$env:USERPROFILE\DisableLoudness.ps1"
+```
+
+You can also run it locally and pick a device interactively:
+```powershell
+& "$env:USERPROFILE\DisableLoudness.ps1"
+# Or specify a device name:
+& "$env:USERPROFILE\DisableLoudness.ps1" -playbackDeviceName BE279
+```
+
+### Method 2: Reset via Device Manager
+If you need to completely reset your sound card settings, you can do so via Device Manager (see [#28](https://github.com/Falcosc/enable-loudness-equalisation/issues/28)):
 1. Open **Device Manager**.
 2. Expand **Sound, video and game controllers**.
 3. Right-click on your Audio Device.

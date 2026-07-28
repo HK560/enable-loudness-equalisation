@@ -138,9 +138,26 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 ---
 
-## 🔄 恢复原始设置
-如果删除修改的注册表项，大多数驱动程序会自动恢复默认配置。
-此外，可以通过设备管理器重置声卡设置（参考 [#28](https://github.com/Falcosc/enable-loudness-equalisation/issues/28)）：
+## 🔄 恢复原始设置 / 卸载
+
+### 方法 1：使用卸载脚本自动还原（推荐）
+在 PowerShell 中运行以下一键脚本即可移除已启用的响度均衡配置并恢复系统默认音效设置：
+
+```powershell
+Invoke-WebRequest "https://raw.githubusercontent.com/HK560/enable-loudness-equalisation/main/DisableLoudness.ps1" -OutFile "$env:USERPROFILE\DisableLoudness.ps1"
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+& "$env:USERPROFILE\DisableLoudness.ps1"
+```
+
+你也可以在本地直接运行该脚本并从菜单中选择目标设备：
+```powershell
+& "$env:USERPROFILE\DisableLoudness.ps1"
+# 或者指定设备名称：
+& "$env:USERPROFILE\DisableLoudness.ps1" -playbackDeviceName BE279
+```
+
+### 方法 2：通过设备管理器重置声卡
+如果需要完全重置声卡，也可以通过设备管理器重置声卡设置（参考 [#28](https://github.com/Falcosc/enable-loudness-equalisation/issues/28)）：
 1. 打开**设备管理器**（Device Manager）。
 2. 展开**声音、视频和游戏控制器**。
 3. 右键点击您的音频设备。
